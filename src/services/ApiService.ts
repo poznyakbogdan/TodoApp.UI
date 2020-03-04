@@ -15,8 +15,22 @@ class ApiService {
         return apiResponse.data;
     }
 
-    public async createTask(name: string): Promise<Task> {
-        let response = await this.instance.post("/tasks", {name: name});
+    public async createTask(description: string): Promise<Task> {
+        let response = await this.instance.post("/tasks", {description});
+        return response.data;
+    }
+
+    public async removeTask(id: number) {
+        let response = await this.instance.delete(`/tasks/${id}`);
+        return response.data;
+    }
+
+    public async updateTask(id: number, name: string = "", description: string = "", status: number = null) {
+        let response = await this.instance.put(`/tasks/${id}`, {
+            name,
+            description,
+            status
+        });
         return response.data;
     }
 }

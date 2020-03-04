@@ -4,7 +4,7 @@ import Routing from "./Routing";
 
 const App : React.FC = () => {
     return (
-        <div className="">
+        <div className="container">
             <Router>
                 <Routing/>
             </Router>
