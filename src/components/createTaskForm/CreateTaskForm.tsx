@@ -1,26 +1,31 @@
 import React from "react";
 import { InputGroup, FormControl, Button } from "react-bootstrap";
-import store from "../../redux/store";
-import { addTask, AddTaskPayload } from "../../redux/actions";
+import { createTask } from "../../redux/actions";
+import { connect } from "react-redux";
 
-const CreateTaskForm: React.FC = () => {
+let CreateTaskForm: React.FC<{onSubmit: Function}> = (props) => {
     const [description, setDescription] = React.useState("");
     
-    function onSubmit() {
-        const payload = {
-            text: description
-        } as AddTaskPayload;
-        store.dispatch(Object.assign({}, addTask(payload)));
-    }
-
     return (
         <InputGroup className="mb-3">
             <FormControl aria-describedby="basic-addon1" type="text" name="task_description" id="task_description" onChange={(e:any) => {
                 setDescription(e.target.value)
             } } />
-            <Button onClick={onSubmit}>V</Button>
+            <Button onClick={() => props.onSubmit(description)}>V</Button>
         </InputGroup>
     );
 }
 
-export default CreateTaskForm;
+function mapStateToProps() {
+    return {};
+}
+
+function mapDispatchToProps(dispatch: any) {
+    return {
+        onSubmit: (description: string) => {
+            dispatch(createTask(description))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTaskForm);

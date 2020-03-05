@@ -1,5 +1,11 @@
 import Task from "../models/Task";
 
 export default interface IStateModel {
-    tasks: Task[]
+    entities: {
+        tasks: Task[]
+    },
+    board: {
+        isFetching: boolean,
+        items: number[]
+    }
 }

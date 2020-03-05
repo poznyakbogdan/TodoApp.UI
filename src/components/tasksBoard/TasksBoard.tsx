@@ -1,8 +1,6 @@
 import React from "react";
-import IStateModel from "../../redux/stateModel";
-import store from "../../redux/store";
-import CreateTaskForm from "../createTaskForm/CreateTaskForm";
 import TasksView from "./TasksView";
+import CreateTaskForm from "../createTaskForm/CreateTaskForm";
 
 const TasksBoard: React.FC = () => {    
     return (

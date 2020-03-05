@@ -1,15 +1,9 @@
 import { Button } from "react-bootstrap";
 import React from "react";
-import store from "../../redux/store";
-import { removeTask } from "../../redux/actions";
 
-const RemoveTaskButton: React.FC<{taskId: number}> = (props) => {
-    function onClick(){
-        store.dispatch(Object.assign({}, removeTask({id: props.taskId})));
-    }
-
+const RemoveTaskButton: React.FC<{taskId: number, onClick: Function}> = (props) => {
     return (
-        <Button onClick={onClick} >
+        <Button onClick={() => props.onClick(props.taskId)} >
             X
         </Button>
     );

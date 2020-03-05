@@ -1,19 +1,13 @@
 import React from "react";
-import store from "../../redux/store";
 import { InputGroup, FormControl, DropdownButton, Dropdown } from "react-bootstrap";
-import { updateTask } from "../../redux/actions";
+import { updateTaskAsync } from "../../redux/actions";
 import { Button } from "react-bootstrap";
+import { connect } from "react-redux";
 
-const UpdateTaskForm: React.FC<{taskId: number}> = (props) => {
+const UpdateTaskForm: React.FC<{taskId: number, onSubmit: Function}> = (props) => {
     const [description, setDescription] = React.useState("");
     const [status, setStatus] = React.useState(0);
     
-
-    function onSubmit(){
-
-        store.dispatch(Object.assign({}, updateTask({id: props.taskId, description, status})));
-    }
-
     return (
         <>
             <InputGroup className="mb-3">
@@ -32,10 +26,22 @@ const UpdateTaskForm: React.FC<{taskId: number}> = (props) => {
                     <Dropdown.Item href="#" onClick={() => setStatus(1)}>In progress</Dropdown.Item>
                     <Dropdown.Item href="#" onClick={() => setStatus(2)}>Done</Dropdown.Item>
                 </DropdownButton>
-                <Button onClick={onSubmit} variant="outline-secondary">Update</Button>
+                <Button onClick={() => props.onSubmit(props.taskId, description, status)} variant="outline-secondary">Update</Button>
             </InputGroup>
         </>
     );
 }
 
-export default UpdateTaskForm;
+function mapStateToProps(state: any) {
+    return {};
+}
+
+function mapDispatchToProps(dispatch: any) {
+    return {
+        onSubmit: (id: number, description: string, status: number) => {
+            dispatch(updateTaskAsync(id, description, status))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateTaskForm);

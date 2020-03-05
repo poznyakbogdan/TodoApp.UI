@@ -25,7 +25,7 @@ class ApiService {
         return response.data;
     }
 
-    public async updateTask(id: number, name: string = "", description: string = "", status: number = null) {
+    public async updateTask(id: number, description: string = "", status: number = null) {
         let response = await this.instance.put(`/tasks/${id}`, {
             name,
             description,
