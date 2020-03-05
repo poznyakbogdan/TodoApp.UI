@@ -1,13 +1,12 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import TasksList from "./components/taskList/TasksList";
-import VisibleTodoList from "./components/VisibleTasksList/VisibleTasksList";
+import TasksBoard from "./components/tasksBoard/TasksBoard";
 
 const Routing: React.FC = () => {
     return (
         <Switch>
             <Redirect exact from="/" to="guest" />
-            <Route exact path="/guest" component={VisibleTodoList} />
+            <Route exact path="/guest" component={TasksBoard} />
         </Switch>
     );
 }

@@ -1,31 +1,27 @@
 import Task from "../models/Task";
-import { ADD_TASK, REMOVE_TASK, UPDATE_TASK, AddTaskPayload, RemoveTaskPayload, UpdateTaskPayload, IAction } from "./actions";
+import { ADD_TASK, AddTaskPayload, IAction, REMOVE_TASK, RemoveTaskPayload, UPDATE_TASK, UpdateTaskPayload } from "./actions";
 
-class TaskModel{
-    id: number;
-    text: string;
-
-    constructor(text: string){
-        this.text = text;
-    }
-}
-
-function tasks<T>(state: TaskModel[] = [], action: IAction<T>) {
+function tasks<T>(state: Task[] = [], action: IAction<T>) {
     switch (action.type){
         case ADD_TASK:
+            const description = (action.payload as unknown as AddTaskPayload).text;
             return [
                 ...state,
-                new TaskModel((action.payload as unknown as AddTaskPayload).text)
-            ]
+                new Task(state.length, description, new Date(), 0)
+            ];;
+
         case REMOVE_TASK:
-            return state.filter(x => x.id != (action.payload as unknown as RemoveTaskPayload).id);
+            const removeTaskId = (action.payload as unknown as RemoveTaskPayload).id;
+            return state.filter(x => x.id != removeTaskId);    
+
         case UPDATE_TASK:
-            let payload = (action.payload as unknown as UpdateTaskPayload);
-            let index = state.findIndex(x => x.id == payload.id);
-            let newTask = new TaskModel(state[index].text);
-            newTask.id = state[index].id;
-            state[index] = newTask;
-            return state;
+            const payload = (action.payload as unknown as UpdateTaskPayload);
+            const index = state.findIndex(x => x.id == payload.id);
+            const task = state[index];
+            const newState = [...state];
+            newState[index] = new Task(task.id, payload.description, task.createdAt, payload.status);
+            return newState;   
+
         default: 
             return state;
     }
@@ -33,6 +29,6 @@ function tasks<T>(state: TaskModel[] = [], action: IAction<T>) {
 
 export default function todoApp(state:any = {}, action: any) {
     return {
-      tasks: tasks(state.todos, action)
+      tasks: tasks(state.tasks, action)
     }
 }
