@@ -1,8 +1,11 @@
+import Status from "./Status";
+
+
 export default class Task {
     id: number;
     description: string;
     createdAt: Date;
-    status: number;
+    status: Status;
 
     constructor (id: number, description: string, createdAt: Date, status: number){
         this.id = id;

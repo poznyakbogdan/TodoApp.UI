@@ -1,8 +1,10 @@
 import React from "react";
 import Task from "../../models/Task";
-import TaskItem from "../taskItem/TaskItem";
-import UpdateTaskForm from "../updateTaskForm/UpdateTaskForm";
-import RemoveTaskButton from "../removeTask/RemoveTaskButton";
+import { Spinner, ListGroup, ListGroupItem } from "react-bootstrap";
+import TasksListItem from "../taskItem/TasksListItem";
+import IStateModel from "../../redux/types";
+import { fetchTasksAsync, removeTaskAsync } from "../../redux/actions/asyncActions";
+import { connect } from "react-redux";
 
 export interface ITaskListProps {
     tasks: Task[],
@@ -11,24 +13,41 @@ export interface ITaskListProps {
     onRemoveItem: Function
 }
 
-export const TasksList: React.FC<ITaskListProps> = (props) => {
-    
+let TasksList: React.FC<ITaskListProps> = (props) => {
     React.useEffect(() => {
         props.initialize();
     }, [])
 
-    return props.isLoading ? <span>Loading...</span> : (
+    return props.isLoading ? <Spinner animation="border" variant="primary" /> : (
         <div className="container">
-            <h3>Tasks List</h3>
+            <h3>To do</h3>
             <div className="container">
-                {
-                    props.tasks.map(task => <div key={task.id}>
-                        <TaskItem task={task} />
-                        <UpdateTaskForm taskId={task.id} />
-                        <RemoveTaskButton taskId={task.id} onClick={props.onRemoveItem} />
-                    </div>)
-                }
+                <ListGroup as="ul">
+                    {
+                        props.tasks.map(task => <TasksListItem task={task} onRemoveItem={props.onRemoveItem} key={task.id} />)
+                    }    
+                </ListGroup>
             </div>
         </div>
     );
 }
+
+const mapStateToProps = (state: IStateModel) : ITaskListProps => {
+    return {
+      tasks: state.board.items.map(id => state.entities.tasks.find(x => x.id == id)),
+      isLoading: state.board.isFetching
+    } as ITaskListProps
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    initialize: () => {
+      dispatch(fetchTasksAsync())
+    },
+    onRemoveItem: (id: number) => {
+      dispatch(removeTaskAsync(id))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TasksList)

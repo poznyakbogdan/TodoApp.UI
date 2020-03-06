@@ -1,13 +1,19 @@
 import React from "react";
 import { InputGroup, FormControl, DropdownButton, Dropdown } from "react-bootstrap";
-import { updateTaskAsync } from "../../redux/actions";
 import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
+import { updateTaskAsync } from "../../redux/actions/asyncActions";
+import Status from "../../models/Status";
+import { formatStatus } from "../../formats";
+import store from "../../redux/store";
+import IStateModel from "../../redux/types";
 
-const UpdateTaskForm: React.FC<{taskId: number, onSubmit: Function}> = (props) => {
-    const [description, setDescription] = React.useState("");
-    const [status, setStatus] = React.useState(0);
-    
+const UpdateTaskForm: React.FC<{taskId: number, onSubmit: Function, afterUpdate: Function}> = (props) => {
+    let task = (store.getState() as IStateModel).entities.tasks.find(x => x.id == props.taskId);
+
+    const [description, setDescription] = React.useState(task.description);
+    const [status, setStatus] = React.useState(task.status);
+
     return (
         <>
             <InputGroup className="mb-3">
@@ -16,17 +22,24 @@ const UpdateTaskForm: React.FC<{taskId: number, onSubmit: Function}> = (props) =
                     type="text" 
                     name={`task_description_${props.taskId}`} 
                     id={`task_description_${props.taskId}`} 
+                    value={description}
                     onChange={(e:any) => setDescription(e.target.value) } />
                 <DropdownButton
                     as={InputGroup.Prepend}
                     variant="outline-secondary"
-                    title="Status"
+                    title={formatStatus(status)}
                     id="input-group-dropdown-1">
-                    <Dropdown.Item href="#" onClick={() => setStatus(0)}>Not started</Dropdown.Item>
-                    <Dropdown.Item href="#" onClick={() => setStatus(1)}>In progress</Dropdown.Item>
-                    <Dropdown.Item href="#" onClick={() => setStatus(2)}>Done</Dropdown.Item>
+                        {
+                            [Status.NotStarted, Status.InProgress, Status.Done]
+                                .map(status => 
+                                    <Dropdown.Item href="#" key={status} eventKey={""+status} onClick={() => setStatus(status)}>{formatStatus(status)}</Dropdown.Item>
+                                )
+                        }
                 </DropdownButton>
-                <Button onClick={() => props.onSubmit(props.taskId, description, status)} variant="outline-secondary">Update</Button>
+                <Button onClick={() => {
+                     props.onSubmit(props.taskId, description, status);
+                     props.afterUpdate();
+                }} variant="primary">Update</Button>
             </InputGroup>
         </>
     );

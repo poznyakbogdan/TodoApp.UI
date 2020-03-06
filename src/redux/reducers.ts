@@ -1,7 +1,8 @@
 import Task from "../models/Task";
-import { ADD_TASK, IAction, REMOVE_TASK, UPDATE_TASK, TASKS_API_REQUEST, TASKS_API_REQUEST_SUCCESS, SucessTasksApiRequestPayload, INITIALIZE_TASKS, TASKS_API_REQUEST_FAILED, CREATE_TASK_API_REQUEST_FAILED, CREATE_TASK_API_REQUEST_SUCCESS, SucessCreateTaskApiRequestPayload, REMOVE_TASK_API_REQUEST_SUCCESS, updateTask, UPDATE_TASK_API_REQUEST_SUCCESS } from "./actions";
+import { INITIALIZE_TASKS, ADD_TASK, REMOVE_TASK, UPDATE_TASK, TASKS_API_REQUEST, TASKS_API_REQUEST_SUCCESS, TASKS_API_REQUEST_FAILED, CREATE_TASK_API_REQUEST_SUCCESS, REMOVE_TASK_API_REQUEST_SUCCESS, UPDATE_TASK_API_REQUEST_SUCCESS } from "./actionNames";
+import { SucessTasksApiRequestPayload, SucessCreateTaskApiRequestPayload, Action } from "./types";
 
-function tasks<T>(state: Task[] = [], action: IAction<T>) {
+function tasks<T>(state: Task[] = [], action: Action<T>) {
     switch (action.type){
         case INITIALIZE_TASKS:
             const tasks = (action.payload as unknown as SucessTasksApiRequestPayload).tasks;
@@ -30,7 +31,7 @@ function tasks<T>(state: Task[] = [], action: IAction<T>) {
     }
 }
 
-function board<T>(state: any = {isFetching: false, items: []}, action: IAction<T>) {
+function board<T>(state: any = {isFetching: false, items: []}, action: Action<T>) {
     switch (action.type){
         case TASKS_API_REQUEST:
             return {
