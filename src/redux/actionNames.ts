@@ -1,0 +1,14 @@
+export const ADD_TASK = 'AddTask';
+export const REMOVE_TASK = 'RemoveTask';
+export const UPDATE_TASK = 'UpdateTask';
+export const INITIALIZE_TASKS = 'InitializeTasks';
+export const TASKS_API_REQUEST = 'TasksApiRequest';
+export const TASKS_API_REQUEST_SUCCESS = 'TasksApiSuccess';
+export const TASKS_API_REQUEST_FAILED = 'TasksApiFailed';
+export const CREATE_TASK_API_REQUEST_SUCCESS = 'CreateTaskApiSuccess';
+export const CREATE_TASK_API_REQUEST_FAILED = 'CreateTaskApiFailed';
+export const REMOVE_TASK_API_REQUEST_SUCCESS = 'RemoveTaskApiSuccess';
+export const REMOVE_TASK_API_REQUEST_FAILED = 'RemoveTaskApiFailed';
+export const UPDATE_TASK_API_REQUEST_SUCCESS = 'UpdateTaskApiSucess'; 
+export const REMOVE_TASK_FROM_BOARD = 'RemoveTaskFromBoard';
+export const ADD_TASK_TO_BOARD = 'AddTaskToBoard';

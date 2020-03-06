@@ -1,12 +1,12 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import TasksList from "./components/taskList/TasksList";
+import TasksBoard from "./components/tasksBoard/TasksBoard";
 
 const Routing: React.FC = () => {
     return (
         <Switch>
             <Redirect exact from="/" to="guest" />
-            <Route exact path="/guest" component={TasksList} />
+            <Route exact path="/guest" component={TasksBoard} />
         </Switch>
     );
 }
