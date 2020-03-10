@@ -1,11 +1,12 @@
 import Task from "../models/Task";
-import { INITIALIZE_TASKS, ADD_TASK, REMOVE_TASK, UPDATE_TASK, TASKS_API_REQUEST, TASKS_API_REQUEST_SUCCESS, TASKS_API_REQUEST_FAILED, CREATE_TASK_API_REQUEST_SUCCESS, REMOVE_TASK_API_REQUEST_SUCCESS, UPDATE_TASK_API_REQUEST_SUCCESS } from "./actionNames";
-import { SucessTasksApiRequestPayload, SucessCreateTaskApiRequestPayload, Action } from "./types";
+import { ADD_TASKS_TO_STORAGE, ADD_TASK, REMOVE_TASK, UPDATE_TASK, TASKS_API_REQUEST_SUCCESS, TASKS_API_REQUEST_FAILED, ADD_TASKS_TO_VIEW, ADD_TASK_TO_VIEW, REMOVE_TASK_FROM_VIEW, TASKS_API_REQUEST_STARTED, CATEGORIES_API_REQUEST_STARTED, CATEGORIES_API_REQUEST_SUCCESS, CATEGORIES_API_REQUEST_FAILED, ADD_CATEGORIES_TO_STORAGE, ADD_CATEGORY_TO_STORAGE, UPDATE_CATEGORY_IN_STORAGE, ADD_CATEGORIES_TO_VIEW, ADD_CATEGORY_TO_VIEW } from "./actionNames";
+import IStateModel, { Action } from "./types";
+import { Category } from "../models/Category";
 
-function tasks<T>(state: Task[] = [], action: Action<T>) {
+function tasksStorage<T>(state: Task[] = [], action: Action<T>) {
     switch (action.type){
-        case INITIALIZE_TASKS:
-            const tasks = (action.payload as unknown as SucessTasksApiRequestPayload).tasks;
+        case ADD_TASKS_TO_STORAGE:
+            const tasks = (action.payload as unknown as Task[]);
             return [...tasks];
 
         case ADD_TASK:
@@ -31,60 +32,112 @@ function tasks<T>(state: Task[] = [], action: Action<T>) {
     }
 }
 
-function board<T>(state: any = {isFetching: false, items: []}, action: Action<T>) {
-    switch (action.type){
-        case TASKS_API_REQUEST:
-            return {
-                isFetching: true,
-                items: state.items
-            }
-        
-        case TASKS_API_REQUEST_SUCCESS:
-            const tasks = (action.payload as unknown as SucessTasksApiRequestPayload).tasks;
-            return {
-                isFetching: false,
-                items: tasks.map(x => x.id)
-            }
-
-        case TASKS_API_REQUEST_FAILED:
-            return {
-                isFetching: false,
-                items: [] as Task[]
-            }
-
-        case CREATE_TASK_API_REQUEST_SUCCESS:
-            const taskId = (action.payload as unknown as SucessCreateTaskApiRequestPayload).task.id;
-            return {
-                isFetching: false,
-                items: [
-                    ...state.items,
-                    taskId
-                ]
-            }
-
-        case REMOVE_TASK_API_REQUEST_SUCCESS:
-            const removedTaskId = (action.payload as unknown as number);
-            return {
-                isFetching: false,
-                items: state.items.filter((x: number) => x != removedTaskId)
-            }
-
-        case UPDATE_TASK_API_REQUEST_SUCCESS:
-            return {
-                isFetching: false,
-                items: state.items
-            }
-
+function tasksView<T>(state: number[] = [], action: Action<T>) {
+    switch (action.type) {
+        case ADD_TASKS_TO_VIEW:
+            return action.payload as unknown as number[];
+        case ADD_TASK_TO_VIEW:
+            return [
+                ...state,
+                (action.payload as unknown as number)
+            ];
+        case REMOVE_TASK_FROM_VIEW:
+            const removedId = (action.payload as unknown as number);
+            return state.filter(x => x != removedId);
         default:
             return state;
     }
 }
 
-export default function todoApp(state:any = {entities: {}}, action: any) {
+function categoriesView<T>(state: number[] = [], action: Action<T>) {
+    switch (action.type) {
+        case ADD_CATEGORIES_TO_VIEW:
+            return action.payload as unknown as number[];
+        case ADD_CATEGORY_TO_VIEW:
+            return [
+                ...state,
+                (action.payload as unknown as number)
+            ];
+        default:
+            return state;
+    }
+}
+
+function categories<T>(state: Category[] = [], action: Action<T>) {
+    switch (action.type) {
+        case ADD_CATEGORIES_TO_STORAGE:
+            return [...(action.payload as unknown as Category[])];
+        
+        case ADD_CATEGORY_TO_STORAGE:
+            return [
+                ...state,
+                (action.payload as unknown as Category)
+            ];
+
+        case UPDATE_CATEGORY_IN_STORAGE:
+            const updatedCategory = (action.payload as unknown as Category);
+            const index = state.findIndex(x => x.id == updatedCategory.id);
+            const newState = [...state];
+            newState[index] = updatedCategory;
+            return newState;   
+    
+        default:
+            return state;
+    }
+}
+
+function isTasksFetching<T>(state: boolean = false, action: Action<T>) {
+    switch (action.type) {
+        case TASKS_API_REQUEST_STARTED:
+            return true;
+        case TASKS_API_REQUEST_SUCCESS:
+        case TASKS_API_REQUEST_FAILED:
+                return false;
+        default:
+            return false;
+    }
+}
+
+function isCategoriesFetching<T>(state: boolean = false, action: Action<T>) {
+    switch (action.type) {
+        case CATEGORIES_API_REQUEST_STARTED:
+            return true;
+        case CATEGORIES_API_REQUEST_SUCCESS:
+        case CATEGORIES_API_REQUEST_FAILED:
+                return false;
+        default:
+            return false;
+    }
+}
+
+const DAFAULT_STATE: IStateModel = {
+    entities: {
+        tasks: [],
+        categories: [] 
+    },
+    board: {
+        isTasksFetching: false,
+        isCategoriesFetching: false,
+        items: {
+            tasks: [],
+            categories: []
+        }
+    }
+}
+
+export default function todoApp(state: IStateModel = DAFAULT_STATE, action: any) {
     return {
         entities: {
-            tasks: tasks(state.entities.tasks, action)
+            tasks: tasksStorage(state.entities.tasks, action),
+            categories: categories(state.entities.categories, action)
         },
-        board: board(state.board, action)
-    }
+        board: {
+            isTasksFetching: isTasksFetching(state.board.isTasksFetching, action),
+            isCategoriesFetching: isCategoriesFetching(state.board.isCategoriesFetching, action),
+            items: {
+                tasks: tasksView(state.board.items.tasks, action),
+                categories: categoriesView(state.board.items.categories, action)
+            }
+        }
+    } as IStateModel
 }

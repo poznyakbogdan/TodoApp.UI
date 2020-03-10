@@ -6,6 +6,7 @@ export default class Task {
     description: string;
     createdAt: Date;
     status: Status;
+    categoryId: number
 
     constructor (id: number, description: string, createdAt: Date, status: number){
         this.id = id;
