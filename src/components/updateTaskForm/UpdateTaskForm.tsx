@@ -7,12 +7,14 @@ import Status from "../../models/Status";
 import { formatStatus } from "../../formats";
 import store from "../../redux/store";
 import IStateModel from "../../redux/types";
+import CategoryPicker from "../categoryPicker/CategoryPicker";
 
 const UpdateTaskForm: React.FC<{taskId: number, onSubmit: Function, afterUpdate: Function}> = (props) => {
     let task = (store.getState() as IStateModel).entities.tasks.find(x => x.id == props.taskId);
 
     const [description, setDescription] = React.useState(task.description);
     const [status, setStatus] = React.useState(task.status);
+    const [categoryId, setCategoryId] = React.useState(task.categoryId);
 
     return (
         <>
@@ -24,6 +26,8 @@ const UpdateTaskForm: React.FC<{taskId: number, onSubmit: Function, afterUpdate:
                     id={`task_description_${props.taskId}`} 
                     value={description}
                     onChange={(e:any) => setDescription(e.target.value) } />
+
+                <CategoryPicker initialValue={categoryId} set={setCategoryId}/>    
                 <DropdownButton
                     as={InputGroup.Prepend}
                     variant="outline-secondary"
@@ -37,7 +41,7 @@ const UpdateTaskForm: React.FC<{taskId: number, onSubmit: Function, afterUpdate:
                         }
                 </DropdownButton>
                 <Button onClick={() => {
-                     props.onSubmit(props.taskId, description, status);
+                     props.onSubmit(props.taskId, description, status, categoryId);
                      props.afterUpdate();
                 }} variant="primary">Update</Button>
             </InputGroup>
@@ -51,8 +55,8 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        onSubmit: (id: number, description: string, status: number) => {
-            dispatch(updateTaskAsync(id, description, status))
+        onSubmit: (id: number, description: string, status: number, categoryId: number) => {
+            dispatch(updateTaskAsync(id, description, status, categoryId))
         }
     }
 }
