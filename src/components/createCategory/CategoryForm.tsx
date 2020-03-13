@@ -5,9 +5,7 @@ import { InputGroup, FormControl, Button } from "react-bootstrap";
 const CategoryForm: React.FC<{category?: Category, onSubmit: Function}> = (props) => {
     const isCreate = props.category == null;
     const categoryId = props.category?.id;
-
     const [name, setName] = React.useState(props.category?.name);
-
     return (
         <div className="p-3">
             <InputGroup>

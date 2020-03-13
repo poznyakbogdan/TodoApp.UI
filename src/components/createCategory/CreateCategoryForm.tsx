@@ -10,7 +10,6 @@ function mapStateToProps() {
 function mapDispatchToProps(dispatch: any) {
     return {
         onSubmit: (category: Category) => {
-            console.log("create");
             dispatch(createCategoryAsync(category.name))
         }
     }

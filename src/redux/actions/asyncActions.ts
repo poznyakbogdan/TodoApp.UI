@@ -1,5 +1,9 @@
 import ApiService from "../../services/ApiService";
-import { addTaskToStorage, addTaskToView, removeTaskFromStorage, removeTaskFromView, updateTaskInStorage, addCategoryToStorage, addCategoryToView, addTasksToStorage, addTasksToView, addCategoriesToStorage, addCategoriesToView, categoriesApiRequestStart, categoriesApiRequestSuccess, tasksApiRequestStart, tasksApiRequestSuccess, updateCategoryInStorage, removeCategoryFromView, removeCategoryFromStorage } from "./syncActions";
+import { addTaskToStorage, addTaskToView, removeTaskFromStorage, removeTaskFromView, updateTaskInStorage, 
+    addCategoryToStorage, addCategoryToView, addTasksToStorage, addTasksToView, addCategoriesToStorage, 
+    addCategoriesToView, categoriesApiRequestStart, categoriesApiRequestSuccess, tasksApiRequestStart, 
+    tasksApiRequestSuccess, updateCategoryInStorage, removeCategoryFromView, removeCategoryFromStorage 
+} from "./syncActions";
 
 let apiService = new ApiService();
 

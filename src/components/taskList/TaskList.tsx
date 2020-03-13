@@ -17,13 +17,10 @@ export interface ITaskListProps {
 let TasksList: React.FC<ITaskListProps> = (props) => {
     let { id } = useParams();
     const categoryId = isNaN(parseInt(id)) ? null : parseInt(id);
-
     const tasksToShow = categoryId == null ? props.tasks : props.tasks.filter(x => x.categoryId == categoryId);
-
     React.useEffect(() => {
         props.initialize();
-    }, [])
-
+    }, []);
     return props.isLoading ? <Spinner animation="border" variant="primary" /> : (
         <div className="container">
             <h3>To do</h3>

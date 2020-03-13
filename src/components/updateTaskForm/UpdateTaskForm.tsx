@@ -11,11 +11,9 @@ import CategoryPicker from "../categoryPicker/CategoryPicker";
 
 const UpdateTaskForm: React.FC<{taskId: number, onSubmit: Function, afterUpdate: Function}> = (props) => {
     let task = (store.getState() as IStateModel).entities.tasks.find(x => x.id == props.taskId);
-
     const [description, setDescription] = React.useState(task.description);
     const [status, setStatus] = React.useState(task.status);
     const [categoryId, setCategoryId] = React.useState(task.categoryId);
-
     return (
         <>
             <InputGroup className="mb-3">

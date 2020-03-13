@@ -7,7 +7,6 @@ import CategoryPicker from "../categoryPicker/CategoryPicker";
 let CreateTaskForm: React.FC<{onSubmit: Function}> = (props) => {
     const [description, setDescription] = React.useState("");
     const [categoryId, setCategoryId] = React.useState();
-    
     return (
         <div className="container">
             <InputGroup className="row mb-3">

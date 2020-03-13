@@ -8,7 +8,6 @@ import { ListGroupItem } from "react-bootstrap";
 
 const TasksListItem: React.FC<{task: Task, onRemoveItem: Function}> = (props) => {
     const [isUpdateFormDisplay, setIsUpdateFormDisplay] = React.useState(false);
-
     return (<div className="row tasks-list-item" onClick={() => {setIsUpdateFormDisplay(true)}}>
         <ListGroupItem as="li" action key={props.task.id}>
             <div className="row">

@@ -5,9 +5,9 @@ import { connect } from "react-redux";
 import IStateModel from "../../redux/types";
 import { fetchCategoriesAsync } from "../../redux/actions/asyncActions";
 import { Link } from "react-router-dom";
-import UpdateCategoryForm from "../createCategory/UpdateCategoryForm";
 import "./CategoriesList.scss";
 import RemoveCategoryButton from "../removeCategory/RemoveCategoryButton";
+import UpdateCategoryModal from "../updateCategoryModal/UpdateCategoryModal";
 
 const CategoriesList: React.FC<{items: Category[], init: Function}> = (props) => {
     const [showModal, setShowModal] = React.useState(false);
@@ -19,12 +19,12 @@ const CategoriesList: React.FC<{items: Category[], init: Function}> = (props) =>
 
     return (
         <div className="container">
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Update category</Modal.Title>
-                </Modal.Header>
-                <UpdateCategoryForm category={taskCategory} onSubmit={() => setShowModal(false)} />
-            </Modal>
+            <UpdateCategoryModal 
+                category={taskCategory} 
+                isShowModal={showModal}
+                onHide={() => setShowModal(false)} 
+                onSubmit={() => setShowModal(false)} 
+            />
             <ListGroup as="ul">
                 {
                     props.items.map(category => (
