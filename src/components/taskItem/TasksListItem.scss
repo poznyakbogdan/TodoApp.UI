@@ -1,0 +1,15 @@
+.remove-task-block {
+    display: none;
+}
+
+.tasks-list-item {
+    min-height: 80px;
+}
+
+.tasks-list-item:hover {
+    cursor: pointer;
+}
+
+.tasks-list-item:hover .remove-task-block {
+    display: block;
+}
