@@ -1,4 +1,5 @@
 import Task from "../models/Task"
+import { Category } from "../models/Category"
 
 export type SucessCreateTaskApiRequestPayload = {
     task: Task
@@ -19,10 +20,15 @@ export type Action<T> = {
 
 export default interface IStateModel {
     entities: {
-        tasks: Task[]
+        tasks: Task[],
+        categories: Category[]
     },
     board: {
-        isFetching: boolean,
-        items: number[]
+        isTasksFetching: boolean,
+        isCategoriesFetching: boolean,
+        items: {
+            tasks: number[],
+            categories: number[]
+        }
     }
 }
